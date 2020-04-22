@@ -3,7 +3,7 @@ export default class Interpreter{
     this.binding = new Map()
   }
 
-  getValue(name) {
+  getVariable(name) {
     let value = this.binding.get(name)
     if(value) {
       return value
@@ -13,7 +13,7 @@ export default class Interpreter{
     }
   }
 
-  setValue(name, value) {
+  setVariable(name, value) {
     this.binding.set(name, value)
   }
 
@@ -33,12 +33,12 @@ export default class Interpreter{
   Assignment(node) {
     let lvalue = node.lvalue.accept(this)
     let rvalue = node.rvalue.accept(this)
-    this.setValue(lvalue, rvalue)
+    this.setVariable(lvalue, rvalue)
     return rvalue
   }
 
   VariableValue(node) {
-    return this.getValue(node.value)
+    return this.getVariable(node.value)
   }
 
   VariableName(node) {
