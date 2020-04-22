@@ -23,7 +23,7 @@ export default class Interpreter{
 
   Block(node) {
     let statements = node.statements
-    var retval = 0
+    var retval
     for(let statement of statements) {
       retval = statement.accept(this)
     }
@@ -33,7 +33,7 @@ export default class Interpreter{
   Assignment(node) {
     let lvalue = node.lvalue.accept(this)
     let rvalue = node.rvalue.accept(this)
-    this.setVariable(lvalue, rvalue)
+    this.setValue(lvalue, rvalue)
     return rvalue
   }
 
@@ -51,7 +51,7 @@ export default class Interpreter{
       return node.then_code.accept(this)
     }
     else {
-      return node.then_code.accept(this)
+      return node.else_code.accept(this)
     }
   }
 
@@ -87,7 +87,8 @@ export default class Interpreter{
   }
 
   FunctionCall(node) {
-    return node.name.accept(this).accept(this)
+    let name = node.name.accept(this)
+    return name.accept(this)
   }
 
   FunctionDefinition(node) {

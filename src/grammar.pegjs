@@ -6,14 +6,14 @@ start
   = code
 
 identifier
-  = [a-z][a-zA-Z0-9_]*
+  = [a-z]([a-zA-Z0-9_])*
 
 code
-  = _ statements:statement+ _
+  = statements:statement+
     { return new AST.Block(statements) }
 
 statement
-  = _ "let" __ declaration:variable_declaration
+  = "let" _ declaration:variable_declaration
     { return declaration }
   / assignment:assignment
     { return assignment }
@@ -21,41 +21,41 @@ statement
     { return expr }
 
 variable_declaration
-  = _ left:variable_name _ "=" _ right:expr
+  = left:variable_name "=" right:expr
     { return new AST.Assignment(left, right) }
   / left:variable_name
     { return new AST.Assignment(left, new AST.Integer(0)) }
 
 variable_value
-  = identifier:identifier
+  = _ identifier:identifier _
     { return new AST.VariableValue(identifier.join("")) }
 
 variable_name
-  = identifier:identifier
+  = _ identifier:identifier _
     { return new AST.VariableName(identifier.join("")) }
 
 if_expression
-  = _ condition:expr _ then_block:brace_block _ "else" _ else_block:brace_block
+  = _ condition:expr then_block:brace_block "else" else_block:brace_block
     { return new AST.IfExpression(condition, then_block, else_block) }
-  / _ condition:expr _ then_block:brace_block
-    { return new AST.IfExpression(condition, then_block, []) }
+  / _ condition:expr then_block:brace_block
+    { return new AST.IfExpression(condition, then_block, "") }
 
 assignment
-  = _ left:variable_name _ "=" _ right:expr
+  = left:variable_name "=" right:expr
     { return new AST.Assignment(left, right) }
 
 expr
-  = _ "fn" _ definition:function_definition
+  = _ "fn" definition:function_definition
     { return definition }
-  / _ "if" _ expression:if_expression
+  / _ "if" expression:if_expression
     { return expression }
-  / _ expression:boolean_expression
+  / expression:boolean_expression
     { return expression }
-  / _ expression:arithmetic_expression
+  / expression:arithmetic_expression
     { return expression }
 
 boolean_expression
-  = _ head:arithmetic_expression _ rest:(relop _ arithmetic_expression)*
+  = _ head:arithmetic_expression _ rest:(relop arithmetic_expression)*
     { return rest.reduce(
         (result, [op, right]) => new AST.BinOp(result, op, right),
         head
@@ -63,7 +63,7 @@ boolean_expression
     }
 
 arithmetic_expression
-  = _ head:mult_term _ rest:(addop _ mult_term)*
+  = _ head:mult_term _ rest:(addop mult_term)*
     { return rest.reduce(
         (result, [op, right]) => new AST.BinOp(result, op, right),
         head
@@ -71,7 +71,7 @@ arithmetic_expression
     }
 
 mult_term
-  = _ head:primary _ rest:(mulop _ primary)*
+  = _ head:primary _ rest:(mulop primary)*
     { return rest.reduce(
         (result, [op, right]) => new AST.BinOp(result, op, right),
         head
@@ -111,18 +111,18 @@ relop
   / "<"
 
 function_call
-  = _ value:variable_value _ "(" _ ")"
-    { return new AST.FunctionCall(value, []) }
+  = value:variable_value _ "(" _ ")"
+    { return new AST.FunctionCall(value, "") }
 
 function_definition
-  = _ parameters:param_list _ code:brace_block
+  = parameters:param_list code:brace_block
     { return new AST.FunctionDefinition(parameters, code) }
 
 param_list
   = _ "(" _ ")"
 
 brace_block
-  = _ "{" _ code:code _ "}"
+  = _ "{" _ code:code _  "}" _
     { return code }
 
 
