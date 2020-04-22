@@ -68,17 +68,17 @@ export default class Interpreter{
       case "*":
         return left * right
       case "==":
-        return left == right
+        return left == right === true ? 1 : 0
       case "!=":
-        return left != right
+        return left != right === true ? 1 : 0
       case ">=":
-        return left >= right
+        return left >= right === true ? 1 : 0
       case ">":
-        return left > right
+        return left > right === true ? 1 : 0
       case "<=":
-        return left <= right
+        return left <= right === true ? 1 : 0
       case "<":
-        return left < right
+        return left < right === true ? 1 : 0
     }
   }
 
