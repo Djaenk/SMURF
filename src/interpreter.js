@@ -58,13 +58,13 @@ export default class Interpreter{
   BinOp(node) {
     let left = node.left.accept(this)
     let right = node.right.accept(this)
-    switch(node.op){ 
+    switch(node.op){
       case "-":
         return left - right
       case "+":
         return left + right
       case "/":
-        return Math.round(left / right) 
+        return Math.round(left / right)
       case "*":
         return left * right
       case "==":
