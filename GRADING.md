@@ -1,3 +1,8 @@
+# Week 3
+
+No code submitted
+
+
 # Week 2
 
 | Part           | Comments    | Points |
